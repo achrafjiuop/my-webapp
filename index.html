@@ -1,154 +1,120 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-<link rel="manifest" href="manifest.json">
-
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة تحكم بوت التحميل الشامل</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <title>لوحة تحكم بوت التحميل</title>
     <style>
-        :root {
-            --bg-color: var(--tg-theme-bg-color, #0f172a);
-            --text-color: var(--tg-theme-text-color, #f8fafc);
-            --hint-color: var(--tg-theme-hint-color, #94a3b8);
-            --button-color: var(--tg-theme-button-color, #3b82f6);
-            --button-text-color: var(--tg-theme-button-text-color, #ffffff);
-            --card-bg: rgba(30, 41, 59, 0.7);
-        }
-
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            font-family: Arial, sans-serif;
+            background-color: #0f172a;
+            color: #ffffff;
             margin: 0;
-            padding: 16px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 100vh;
-            box-sizing: border-box;
         }
-
         .container {
             width: 100%;
-            max-width: 420px;
-        }
-
-        .header-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 16px;
-            text-align: center;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-        }
-
-        .header-card h2 {
-            margin: 0 0 8px 0;
-            font-size: 20px;
-        }
-
-        .header-card p {
-            margin: 0;
-            font-size: 13px;
-            color: var(--hint-color);
-            line-height: 1.5;
-        }
-
-        .grid-menu {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .menu-btn {
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: var(--text-color);
-            padding: 12px 10px;
+            max-width: 400px;
+            background: #1e293b;
+            padding: 20px;
             border-radius: 12px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: all 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            margin-top: 20px;
+        }
+        h2 {
             text-align: center;
+            color: #38bdf8;
         }
-
-        .menu-btn:active {
-            transform: scale(0.96);
-            background: rgba(59, 130, 246, 0.3);
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            color: #fff;
+            box-sizing: border-box;
         }
-
-        .full-width {
-            grid-column: span 2;
-            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-            color: #ffffff;
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        button {
+            flex: 1;
+            padding: 12px;
             border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
         }
-
-        .gift-btn {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            color: #ffffff;
-            border: none;
+        .btn-primary {
+            background-color: #3b82f6;
+            color: white;
+        }
+        .btn-danger {
+            background-color: #ef4444;
+            color: white;
+        }
+        #result {
+            margin-top: 15px;
+            padding: 10px;
+            background: #0f172a;
+            border-radius: 8px;
+            text-align: center;
+            display: none;
         }
     </style>
 </head>
 <body>
 
     <div class="container">
+        <h2>لوحة تحكم البوت</h2>
+        <p style="text-align: center; font-size: 13px; color: #94a3b8;">أدخل رابط الوسائط للبدء في المعالجة والتحميل</p>
         
-        <div class="header-card">
-            <h2>🎬 لوحة تحكم بوت التحميل</h2>
-            <p>كل تحميل يكلف نقطة واحدة لكل دقيقة. ادعُ أصدقائك لتربح النقاط ولا تنسَ هدية اليوم!</p>
+        <input type="text" id="urlInput" placeholder="أدخل الرابط هنا (يوتيوب، انستغرام...)...">
+        
+        <div class="btn-group">
+            <button class="btn-primary" onclick="startDownload()">تحميل</button>
+            <button class="btn-danger" onclick="clearInput()">مسح</button>
         </div>
 
-        <div class="grid-menu">
-            <button class="menu-btn full-width" onclick="actionClicked('تحميل فيديو شامل')">📥 📩 تحميل فيديو</button>
-            
-            <button class="menu-btn" onclick="actionClicked('قص مقطع')">✂️ قص مقطع</button>
-            <button class="menu-btn" onclick="actionClicked('بحث في يوتيوب')">🔍 بحث في يوتيوب</button>
-            
-            <button class="menu-btn" onclick="actionClicked('صورة الغلاف')">📸 صورة الغلاف</button>
-            <button class="menu-btn" onclick="actionClicked('تحميل الترجمة')">📝 تحميل الترجمة</button>
-            
-            <button class="menu-btn" onclick="actionClicked('اختبار يومي')">🎯 اختبار يومي</button>
-            <button class="menu-btn" onclick="actionClicked('المفضلة')">⭐ المفضلة</button>
-            
-            <button class="menu-btn" onclick="actionClicked('بحث متقدم')">🔎 بحث متقدم</button>
-            <button class="menu-btn" onclick="actionClicked('إحصائياتي')">📊 إحصائياتي</button>
-            
-            <button class="menu-btn full-width gift-btn" onclick="actionClicked('هدية اليوم')">🎁 هدية اليوم</button>
-            
-            <button class="menu-btn" onclick="actionClicked('النقاط')">🪙 النقاط</button>
-            <button class="menu-btn" onclick="actionClicked('دعوة صديق')">🔗 دعوة صديق</button>
-            
-            <button class="menu-btn" onclick="actionClicked('ملفي الشخصي')">👤 ملفي الشخصي</button>
-            <button class="menu-btn" onclick="actionClicked('السجل')">📜 السجل</button>
-            
-            <button class="menu-btn full-width" style="background: rgba(239, 68, 68, 0.2); border-color: rgba(239, 68, 68, 0.4);" onclick="actionClicked('الدعم الفني')">🎧 الدعم الفني</button>
-            
-            <button class="menu-btn full-width" style="background: rgba(16, 185, 129, 0.2); border-color: rgba(16, 185, 129, 0.4);" onclick="actionClicked('كود هدية')">🎟️ كود هدية</button>
-        </div>
-
+        <div id="result"></div>
     </div>
 
     <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand();
+        function startDownload() {
+            const inputVal = document.getElementById('urlInput').value.trim();
+            const resultDiv = document.getElementById('result');
+            
+            if (inputVal === "") {
+                alert("المرجو إدخال رابط صحيح أولاً!");
+                return;
+            }
 
-        function actionClicked(actionName) {
-            tg.HapticFeedback.impactOccurred('medium');
-            tg.showAlert(`تم اختيار: ${actionName}\nجاري فتح القسم المطلوب في التطبيق...`);
+            resultDiv.style.display = "block";
+            resultDiv.style.color = "#38bdf8";
+            resultDiv.innerHTML = "جاري معالجة الطلب وإرساله للبوت...";
+
+            // محاكاة الاتصال الفعلي أو إرسال الطلب
+            setTimeout(() => {
+                resultDiv.style.color = "#22c55e";
+                resultDiv.innerHTML = "تم إرسال الطلب بنجاح! سيتم بدء التحميل قريباً.";
+            }, 1500);
+        }
+
+        function clearInput() {
+            document.getElementById('urlInput').value = "";
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = "none";
+            resultDiv.innerHTML = "";
         }
     </script>
+
 </body>
 </html>
 
