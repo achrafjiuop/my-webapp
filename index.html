@@ -1,7 +1,9 @@
-d>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بوت التحميل الشامل</title>
+    <title>لوحة تحكم بوت التحميل الشامل</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
@@ -28,284 +30,124 @@ d>
 
         .container {
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
+        }
+
+        .header-card {
             background: var(--card-bg);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 16px;
-            padding: 20px;
+            padding: 16px;
+            text-align: center;
+            margin-bottom: 20px;
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
 
-        h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 22px;
+        .header-card h2 {
+            margin: 0 0 8px 0;
+            font-size: 20px;
+        }
+
+        .header-card p {
+            margin: 0;
+            font-size: 13px;
+            color: var(--hint-color);
+            line-height: 1.5;
+        }
+
+        .grid-menu {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .menu-btn {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-color);
+            padding: 12px 10px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
+            transition: all 0.2s ease;
+            text-align: center;
         }
 
-        .input-group {
-            margin-bottom: 15px;
+        .menu-btn:active {
+            transform: scale(0.96);
+            background: rgba(59, 130, 246, 0.3);
         }
 
-        label {
-            display: block;
-            margin-bottom: 6px;
-            font-size: 14px;
-            color: var(--hint-color);
-        }
-
-        input, select {
-            width: 100%;
-            padding: 12px;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(15, 23, 42, 0.6);
-            color: var(--text-color);
-            font-size: 14px;
-            box-sizing: border-box;
-            outline: none;
-            transition: border-color 0.3s;
-        }
-
-        input:focus, select:focus {
-            border-color: var(--button-color);
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            background-color: var(--button-color);
-            color: var(--button-text-color);
+        .full-width {
+            grid-column: span 2;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: #ffffff;
             border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: opacity 0.2s, transform 0.1s;
         }
 
-        button:active {
-            transform: scale(0.98);
-            opacity: 0.9;
-        }
-
-        .progress-container {
-            margin-top: 15px;
-            display: none;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            width: 0%;
-            background-color: var(--button-color);
-            transition: width 0.4s ease;
-        }
-
-        .history-section {
-            margin-top: 25px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 15px;
-        }
-
-        .history-title {
-            font-size: 14px;
-            color: var(--hint-color);
-            margin-bottom: 10px;
-        }
-
-        .history-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            max-height: 120px;
-            overflow-y: auto;
-        }
-
-        .history-item {
-            font-size: 12px;
-            padding: 6px 10px;
-            background: rgba(255, 255, 255, 0.05);
-            margin-bottom: 6px;
-            border-radius: 6px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+        .gift-btn {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: #ffffff;
+            border: none;
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h2>🎬 بوت التحميل الشامل</h2>
         
-        <div class="input-group">
-            <label for="urlInput">أدخل رابط الفيديو (يوتيوب، تيك توك، انستا):</label>
-            <input type="text" id="urlInput" placeholder="https://...">
+        <div class="header-card">
+            <h2>🎬 لوحة تحكم بوت التحميل</h2>
+            <p>كل تحميل يكلف نقطة واحدة لكل دقيقة. ادعُ أصدقائك لتربح النقاط ولا تنسَ هدية اليوم!</p>
         </div>
 
-        <div class="input-group">
-            <label for="qualitySelect">اختر الجودة أو الصيغة:</label>
-            <select id="qualitySelect">
-                <option value="1080">فيديو عالي الدقة (1080p)</option>
-                <option value="720">فيديو متوسط (720p)</option>
-                <option value="audio">ملف صوتي فقط (MP3)</option>
-            </select>
+        <div class="grid-menu">
+            <button class="menu-btn full-width" onclick="actionClicked('تحميل فيديو شامل')">📥 📩 تحميل فيديو</button>
+            
+            <button class="menu-btn" onclick="actionClicked('قص مقطع')">✂️ قص مقطع</button>
+            <button class="menu-btn" onclick="actionClicked('بحث في يوتيوب')">🔍 بحث في يوتيوب</button>
+            
+            <button class="menu-btn" onclick="actionClicked('صورة الغلاف')">📸 صورة الغلاف</button>
+            <button class="menu-btn" onclick="actionClicked('تحميل الترجمة')">📝 تحميل الترجمة</button>
+            
+            <button class="menu-btn" onclick="actionClicked('اختبار يومي')">🎯 اختبار يومي</button>
+            <button class="menu-btn" onclick="actionClicked('المفضلة')">⭐ المفضلة</button>
+            
+            <button class="menu-btn" onclick="actionClicked('بحث متقدم')">🔎 بحث متقدم</button>
+            <button class="menu-btn" onclick="actionClicked('إحصائياتي')">📊 إحصائياتي</button>
+            
+            <button class="menu-btn full-width gift-btn" onclick="actionClicked('هدية اليوم')">🎁 هدية اليوم</button>
+            
+            <button class="menu-btn" onclick="actionClicked('النقاط')">🪙 النقاط</button>
+            <button class="menu-btn" onclick="actionClicked('دعوة صديق')">🔗 دعوة صديق</button>
+            
+            <button class="menu-btn" onclick="actionClicked('ملفي الشخصي')">👤 ملفي الشخصي</button>
+            <button class="menu-btn" onclick="actionClicked('السجل')">📜 السجل</button>
+            
+            <button class="menu-btn full-width" style="background: rgba(239, 68, 68, 0.2); border-color: rgba(239, 68, 68, 0.4);" onclick="actionClicked('الدعم الفني')">🎧 الدعم الفني</button>
+            
+            <button class="menu-btn full-width" style="background: rgba(16, 185, 129, 0.2); border-color: rgba(16, 185, 129, 0.4);" onclick="actionClicked('كود هدية')">🎟️ كود هدية</button>
         </div>
 
-        <button id="downloadBtn" onclick="startDownload()">بدء التحميل</button>
-
-        <div class="progress-container" id="progressContainer">
-            <label id="progressText" style="text-align: center; margin-bottom: 5px;">جاري المعالجة... 0%</label>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill"></div>
-            </div>
-        </div>
-
-        <div class="history-section">
-            <div class="history-title">📜 التحميلات الأخيرة:</div>
-            <ul class="history-list" id="historyList">
-                <li class="history-item" style="color: var(--hint-color); text-align: center;">لا توجد تحميلات حتى الآن</li>
-            </ul>
-        </div>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        function startDownload() {
-            const urlInput = document.getElementById('urlInput');
-            const url = urlInput.value.trim();
-            const quality = document.getElementById('qualitySelect').value;
-
-            if (!url) {
-                tg.showAlert('الرجاء إدخال رابط صحيح أولاً!');
-                return;
-            }
-
-            const btn = document.getElementById('downloadBtn');
-            const progressContainer = document.getElementById('progressContainer');
-            const progressFill = document.getElementById('progressFill');
-            const progressText = document.getElementById('progressText');
-
-            btn.disabled = true;
-            progressContainer.style.display = 'block';
-            progressFill.style.width = '0%';
-            
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += 20;
-                progressFill.style.width = progress + '%';
-                progressText.innerText = `جاري المعالجة... ${progress}%`;
-
-                if (progress >= 100) {
-                    clearInterval(interval);
-                    setTimeout(() => {
-                        progressContainer.style.display = 'none';
-                        btn.disabled = false;
-                        
-                        addHistory(url, quality);
-                        urlInput.value = '';
-                        
-                        tg.showAlert('تم إرسال الطلب بنجاح وسيتم إرسال الملف إليك في البوت!');
-                    }, 500);
-                }
-            }, 300);
-        }
-
-        function addHistory(url, quality) {
-            const historyList = document.getElementById('historyList');
-            if (historyList.children.length === 1 && historyList.children[0].tagName === 'LI' && historyList.children[0].style.textAlign === 'center') {
-                historyList.innerHTML = '';
-            }
-
-            const li = document.createElement('li');
-            li.className = 'history-item';
-            li.innerText = `[${quality.toUpperCase()}] ${url}`;
-            historyList.prepend(li);
+        function actionClicked(actionName) {
+            tg.HapticFeedback.impactOccurred('medium');
+            tg.showAlert(`تم اختيار: ${actionName}\nجاري فتح القسم المطلوب في التطبيق...`);
         }
     </script>
-</body>
-</html>
-<html lang="ar" dir="rtl">
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تحميل الفيديوهات - Mini App</title>
-    <style>
-        body {
-            font-family: Tahoma, sans-serif;
-            background-color: #0f172a;
-            color: #ffffff;
-            text-align: center;
-            padding: 20px;
-        }
-        .container {
-            max-width: 400px;
-            margin: 50px auto;
-            background: #1e293b;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
-        input {
-            width: 90%;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 6px;
-            border: none;
-            background: #334155;
-            color: white;
-            text-align: center;
-        }
-        button {
-            background: #3b82f6;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        button:hover {
-            background: #2563eb;
-        }
-    </style>
-</head>
-<body>
-
-    <div class="container">
-        <h2>🎬 بوت التحميل</h2>
-        <p>أدخل رابط الفيديو للتحميل المباشر</p>
-        <input type="text" id="videoUrl" placeholder="أصق الرابط هنا...">
-        <br>
-        <button onclick="startDownload()">تحميل الآن</button>
-    </div>
-
-    <script>
-        function startDownload() {
-            const url = document.getElementById('videoUrl').value;
-            if(!url) {
-                alert('الرجاء إدخال رابط صالح!');
-                return;
-            }
-            alert('جاري معالجة الرابط: ' + url);
-        }
-    </script>
-
 </body>
 </html>
 
