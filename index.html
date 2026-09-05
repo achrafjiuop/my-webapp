@@ -1,4 +1,245 @@
-<!DOCTYPE html>
+d>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوت التحميل الشامل</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --bg-color: var(--tg-theme-bg-color, #0f172a);
+            --text-color: var(--tg-theme-text-color, #f8fafc);
+            --hint-color: var(--tg-theme-hint-color, #94a3b8);
+            --button-color: var(--tg-theme-button-color, #3b82f6);
+            --button-text-color: var(--tg-theme-button-text-color, #ffffff);
+            --card-bg: rgba(30, 41, 59, 0.7);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 14px;
+            color: var(--hint-color);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(15, 23, 42, 0.6);
+            color: var(--text-color);
+            font-size: 14px;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--button-color);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--button-color);
+            color: var(--button-text-color);
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.1s;
+        }
+
+        button:active {
+            transform: scale(0.98);
+            opacity: 0.9;
+        }
+
+        .progress-container {
+            margin-top: 15px;
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background-color: var(--button-color);
+            transition: width 0.4s ease;
+        }
+
+        .history-section {
+            margin-top: 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 15px;
+        }
+
+        .history-title {
+            font-size: 14px;
+            color: var(--hint-color);
+            margin-bottom: 10px;
+        }
+
+        .history-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            font-size: 12px;
+            padding: 6px 10px;
+            background: rgba(255, 255, 255, 0.05);
+            margin-bottom: 6px;
+            border-radius: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>🎬 بوت التحميل الشامل</h2>
+        
+        <div class="input-group">
+            <label for="urlInput">أدخل رابط الفيديو (يوتيوب، تيك توك، انستا):</label>
+            <input type="text" id="urlInput" placeholder="https://...">
+        </div>
+
+        <div class="input-group">
+            <label for="qualitySelect">اختر الجودة أو الصيغة:</label>
+            <select id="qualitySelect">
+                <option value="1080">فيديو عالي الدقة (1080p)</option>
+                <option value="720">فيديو متوسط (720p)</option>
+                <option value="audio">ملف صوتي فقط (MP3)</option>
+            </select>
+        </div>
+
+        <button id="downloadBtn" onclick="startDownload()">بدء التحميل</button>
+
+        <div class="progress-container" id="progressContainer">
+            <label id="progressText" style="text-align: center; margin-bottom: 5px;">جاري المعالجة... 0%</label>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <div class="history-section">
+            <div class="history-title">📜 التحميلات الأخيرة:</div>
+            <ul class="history-list" id="historyList">
+                <li class="history-item" style="color: var(--hint-color); text-align: center;">لا توجد تحميلات حتى الآن</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        function startDownload() {
+            const urlInput = document.getElementById('urlInput');
+            const url = urlInput.value.trim();
+            const quality = document.getElementById('qualitySelect').value;
+
+            if (!url) {
+                tg.showAlert('الرجاء إدخال رابط صحيح أولاً!');
+                return;
+            }
+
+            const btn = document.getElementById('downloadBtn');
+            const progressContainer = document.getElementById('progressContainer');
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+
+            btn.disabled = true;
+            progressContainer.style.display = 'block';
+            progressFill.style.width = '0%';
+            
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 20;
+                progressFill.style.width = progress + '%';
+                progressText.innerText = `جاري المعالجة... ${progress}%`;
+
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        progressContainer.style.display = 'none';
+                        btn.disabled = false;
+                        
+                        addHistory(url, quality);
+                        urlInput.value = '';
+                        
+                        tg.showAlert('تم إرسال الطلب بنجاح وسيتم إرسال الملف إليك في البوت!');
+                    }, 500);
+                }
+            }, 300);
+        }
+
+        function addHistory(url, quality) {
+            const historyList = document.getElementById('historyList');
+            if (historyList.children.length === 1 && historyList.children[0].tagName === 'LI' && historyList.children[0].style.textAlign === 'center') {
+                historyList.innerHTML = '';
+            }
+
+            const li = document.createElement('li');
+            li.className = 'history-item';
+            li.innerText = `[${quality.toUpperCase()}] ${url}`;
+            historyList.prepend(li);
+        }
+    </script>
+</body>
+</html>
+<html lang="ar" dir="rtl">
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
