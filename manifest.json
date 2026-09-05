@@ -1,16 +1,9 @@
 {
   "name": "لوحة تحكم بوت التحميل الشامل",
   "short_name": "j1jiuopBot",
-  "start_url": "/my-webapp/",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0f172a",
-  "theme_color": "#3b82f6",
-  "icons": [
-    {
-      "src": "https://via.placeholder.com/512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
+  "theme_color": "#3b82f6"
 }
 
