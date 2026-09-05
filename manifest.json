@@ -1,9 +1,22 @@
 {
   "name": "لوحة تحكم بوت التحميل الشامل",
   "short_name": "j1jiuopBot",
+  "description": "لوحة تحكم شاملة لإدارة وتنزيل الوسائط عبر بوتات تيليجرام بسلاسة وسرعة فائقة",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0f172a",
-  "theme_color": "#3b82f6"
+  "theme_color": "#3b82f6",
+  "icons": [
+    {
+      "src": "https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/android/android.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/android/android.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
 
