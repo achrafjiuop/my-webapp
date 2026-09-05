@@ -48,7 +48,7 @@
             downloadContainer.innerHTML = "";
 
             try {
-                const response = await fetch(`https://api.cobalt.tools/api/json`, {
+                const response = await fetch('https://api.cobalt.tools/api/json', {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json',
@@ -64,17 +64,15 @@
                     statusText.style.color = "#22c55e";
                     statusText.innerHTML = "تم تجهيز الفيديو بنجاح!";
 
-                    // عرض الفيديو في المشغل المدمج للتأكد من رؤيته
                     mediaPlayer.src = downloadUrl;
                     mediaPlayer.style.display = "block";
 
-                    // إضافة زر التنزيل الحقيقي
                     downloadContainer.innerHTML = `<a class="download-link" href="${downloadUrl}" target="_blank" download>تحميل الفيديو (تنزيل مباشر)</a>`;
                 } else {
                     statusText.style.color = "#ef4444";
                     statusText.innerHTML = "فشل في معالجة الرابط، تأكد أنه مدعوم.";
                 }
-            }, catch (error) {
+            } catch (err) {
                 statusText.style.color = "#ef4444";
                 statusText.innerHTML = "حدث خطأ في الاتصال بالسيرفر الخارجي.";
             }
